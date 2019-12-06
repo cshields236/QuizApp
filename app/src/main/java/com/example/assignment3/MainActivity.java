@@ -18,13 +18,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
 public class MainActivity extends AppCompatActivity {
 
-    int total = 1;
+    int total = 0;
     int correct = 0;
     int wrong = 0;
 
-    TextView questionTxt;
+    TextView questionTxt, question_count;
     RadioGroup group;
     RadioButton option1;
     RadioButton option2;
@@ -46,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         option2 = findViewById(R.id.radio_button2);
         option3 = findViewById(R.id.radio_button3);
         option4 = findViewById(R.id.radio_button4);
-
+        question_count = findViewById(R.id.text_view_question_count);
         group = findViewById(R.id.radio_group);
         confirm = findViewById(R.id.button_confirm);
         TextView timer = findViewById(R.id.text_timer);
@@ -55,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateQuestion() {
+        total++;
+        question_count.setText(String.format("Question %s/5",  String.valueOf(total)));
         if (total > 4){
             //Open Result Activity
 
@@ -68,12 +74,21 @@ public class MainActivity extends AppCompatActivity {
 
                     Question question = dataSnapshot.getValue(Question.class);
 
+                    ArrayList<String> options = new ArrayList<>();
 
+                    options.add(question.correct_answer);
+                    options.add(question.incorrect_answers.get(0));
+                    options.add(question.incorrect_answers.get(1));
+                    options.add(question.incorrect_answers.get(2));
                     questionTxt.setText(question.question);
-                    option1.setText(question.correct_answer);
-                    option2.setText(question.incorrect_answers.get(0));
-                    option3.setText(question.incorrect_answers.get(1));
-                    option4.setText(question.incorrect_answers.get(2));
+
+                    Collections.shuffle(options);
+
+
+                        option1.setText(options.get(0));
+                        option2.setText(options.get(1));
+                        option3.setText(options.get(2));
+                        option4.setText(options.get(3));
 
                     correctAns = (question.getCorrect_answer());
                 }
