@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/text_view_score"
@@ -33,40 +34,39 @@
         android:id="@+id/text_view_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question will be here"
-        android:textSize="20sp"
         android:layout_above="@id/radio_group"
         android:layout_marginBottom="16dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+       android:divider="@color/colorAccent"
+    android:showDividers="beginning"
+        >
 
         <RadioButton
             android:id="@+id/radio_button1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Option 1" />
+            android:layout_height="wrap_content" />
 
         <RadioButton
             android:id="@+id/radio_button2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Option 2" />
+            android:layout_height="wrap_content" />
 
         <RadioButton
             android:id="@+id/radio_button3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Option 3" />
+            android:layout_height="wrap_content" />
 
         <RadioButton
             android:id="@+id/radio_button4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Option 4" />
+            android:layout_height="wrap_content" />
 
     </RadioGroup>
 

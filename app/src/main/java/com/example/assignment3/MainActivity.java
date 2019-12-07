@@ -3,6 +3,7 @@ package com.example.assignment3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     int correct = 0;
     int wrong = 0;
 
-    TextView questionTxt, question_count;
+    TextView questionTxt, question_count, view_score;
     RadioGroup group;
     RadioButton option1;
     RadioButton option2;
@@ -36,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
     RadioButton option4;
     RadioButton selected;
     Button confirm;
-    DatabaseReference qreference;
+    DatabaseReference reference;
     String correctAns;
+    TextView timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,30 +47,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        questionTxt =  findViewById(R.id.text_view_question);
+        questionTxt = findViewById(R.id.text_view_question);
         option1 = findViewById(R.id.radio_button1);
         option2 = findViewById(R.id.radio_button2);
         option3 = findViewById(R.id.radio_button3);
         option4 = findViewById(R.id.radio_button4);
         question_count = findViewById(R.id.text_view_question_count);
+        view_score = findViewById(R.id.text_view_score);
         group = findViewById(R.id.radio_group);
         confirm = findViewById(R.id.button_confirm);
-        TextView timer = findViewById(R.id.text_timer);
+        timer = findViewById(R.id.text_timer);
 
         updateQuestion();
+
+
     }
 
     private void updateQuestion() {
         total++;
-        question_count.setText(String.format("Question %s/5",  String.valueOf(total)));
-        if (total > 4){
+
+        question_count.setText(String.format("Question %s/5", String.valueOf(total)));
+        if (total > 5) {
             //Open Result Activity
+            Intent intent = new Intent(this, ResultActivity.class);
+            intent.putExtra("correct", String.valueOf(correct));
+            intent.putExtra("incorrect", String.valueOf(wrong));
+            startActivity(intent);
+        } else {
+            reference = FirebaseDatabase.getInstance().getReference().child("results").child(String.valueOf(total));
 
-        }
-        else{
-            qreference = FirebaseDatabase.getInstance().getReference().child("results").child(String.valueOf(total));
-
-            qreference.addValueEventListener(new ValueEventListener() {
+            reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -85,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
                     Collections.shuffle(options);
 
 
-                        option1.setText(options.get(0));
-                        option2.setText(options.get(1));
-                        option3.setText(options.get(2));
-                        option4.setText(options.get(3));
+                    option1.setText(options.get(0));
+                    option2.setText(options.get(1));
+                    option3.setText(options.get(2));
+                    option4.setText(options.get(3));
 
                     correctAns = (question.getCorrect_answer());
                 }
@@ -98,44 +106,46 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-            confirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
 
 
             confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checkAnswer();
+                    option1.setChecked(false);
+                    option2.setChecked(false);
+                    option3.setChecked(false);
+                    option4.setChecked(false);
+
                     if (checkAnswer().equals(correctAns)) {
+
+
                         Toast.makeText(MainActivity.this, "Well done", Toast.LENGTH_LONG).show();
 
                         correct++;
-                    }
-                    else{
+                    } else {
                         Toast.makeText(MainActivity.this, "You silly ", Toast.LENGTH_LONG).show();
-
+                        wrong++;
                     }
+                    updateQuestion();
                 }
+
             });
 
-
+            view_score.setText("Score: " + correct);
         }
 
     }
 
-    public String checkAnswer(){
+    public String checkAnswer() {
 
         int radId = group.getCheckedRadioButtonId();
         selected = findViewById(radId);
         String guess;
         if (selected.getText() != null) {
-             guess = (String) selected.getText();
-        }
-        else{
-             guess = "nah";
+            guess = (String) selected.getText();
+        } else {
+            guess = "nah";
         }
         return guess;
     }
