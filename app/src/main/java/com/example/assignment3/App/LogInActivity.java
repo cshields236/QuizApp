@@ -4,6 +4,7 @@ package com.example.assignment3.App;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class LogInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+        getSupportActionBar().hide();
         Intent i = getIntent();
 
         if (i == null) {
@@ -97,7 +99,7 @@ public class LogInActivity extends AppCompatActivity {
                         Log.d("", "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        startActivity(new Intent(LogInActivity.this, MainActivity.class));
+                        startActivity(new Intent(LogInActivity.this, DashboardActivity.class));
                     } else {
                         Log.w("", "signInWithEmail:failure", task.getException());
                         Toast.makeText(LogInActivity.this, "Authentication failed." + task.getException().getMessage(),
