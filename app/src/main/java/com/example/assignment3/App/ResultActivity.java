@@ -1,10 +1,12 @@
-package com.example.assignment3;
+package com.example.assignment3.App;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.assignment3.R;
 
 public class ResultActivity extends AppCompatActivity {
 TextView correctA, incorrectA;
