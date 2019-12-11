@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     String correctAns;
     TextView timer;
     FirebaseUser firebaseUser;
+    ArrayList<Question> questionsList;
+    final String TAG = "Firebase ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,34 +78,60 @@ public class MainActivity extends AppCompatActivity {
         question_count.setText(String.format("Question %s/5", String.valueOf(total)));
         if (total > 5) {
             //Open Result Activity
-                openResult();
+            openResult();
         } else {
-
-            reference = FirebaseDatabase.getInstance().getReference().child("results").child(String.valueOf(total));
+            questionsList = new ArrayList<>();
+            reference = FirebaseDatabase.getInstance().getReference().child("questions");
 
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Question question = dataSnapshot.getValue(Question.class);
 
-                    ArrayList<String> options = new ArrayList<>();
+                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                        ArrayList<String> options = new ArrayList<>();
+                        Question q = new Question();
+                        q.setQuestion(ds.child("question").getValue().toString());
+                        q.setCategory(ds.child("category").getValue().toString());
+                        q.setCorrect_answer(ds.child("correct_answer").getValue().toString());
+                        options.add(ds.child("correct_answer").getValue().toString());
+                        options.add(ds.child("incorrect_answers").child("0").getValue().toString());
+                        options.add(ds.child("incorrect_answers").child("1").getValue().toString());
+                        options.add(ds.child("incorrect_answers").child("2").getValue().toString());
+                        q.setIncorrect_answers(options);
+                        questionsList.add(q);
 
-                    options.add(question.correct_answer);
-                    options.add(question.incorrect_answers.get(0));
-                    options.add(question.incorrect_answers.get(1));
-                    options.add(question.incorrect_answers.get(2));
-                    questionTxt.setText(question.question);
+                       // Log.d(TAG, "onDataChange: " + q.getCategory());
 
-                    Collections.shuffle(options);
+                    }
+
+                    for (Question q : questionsList) {
+                        if (q.getCategory().equalsIgnoreCase("Sports")) {
+                            ArrayList<String> options = new ArrayList<>();
+                            options.add(q.getIncorrect_answers().get(0));
+                            options.add(q.getIncorrect_answers().get(1));
+                            options.add(q.getIncorrect_answers().get(2));
+                            options.add(q.getCorrect_answer());
+
+                            //Setting Textviews with the values from the database
+                            questionTxt.setText(q.question);
+
+                            //Shuffling answers list so its a random selection each time the app is run
+                            Collections.shuffle(options);
+
+                            option1.setText(options.get(0));
+                            option2.setText(options.get(1));
+                            option3.setText(options.get(2));
+                            option4.setText(options.get(3));
+
+                            correctAns = (q.getCorrect_answer());
+
+                            Log.d(TAG, "Right answer: " + q.correct_answer);
+
+                        }
+                    }
 
 
-                    option1.setText(options.get(0));
-                    option2.setText(options.get(1));
-                    option3.setText(options.get(2));
-                    option4.setText(options.get(3));
-
-                    correctAns = (question.getCorrect_answer());
                 }
 
                 @Override
@@ -162,8 +191,8 @@ public class MainActivity extends AppCompatActivity {
         return guess;
     }
 
-    public void saveUserInfo(){
-        FirebaseAuth firebaseAuth= FirebaseAuth.getInstance();
+    public void saveUserInfo() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
