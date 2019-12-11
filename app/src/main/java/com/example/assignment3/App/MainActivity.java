@@ -75,8 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateQuestion() {
         total++;
+        Intent i = getIntent();
+        catChoice =  i.getStringExtra("CatChoice");
 
-        catChoice = "sports";
         question_count.setText(String.format("Question %s/5", String.valueOf(total)));
         if (total > 5) {
             //Open Result Activity
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     //Shuffling the array to get a random question
                     Collections.shuffle(questionsList);
                     for (Question q : questionsList) {
-                        if (q.getCategory().equalsIgnoreCase(catChoice)) {
+                        if (q.getCategory().contains(catChoice)) {
                             ArrayList<String> options = new ArrayList<>();
                             options.add(q.getIncorrect_answers().get(0));
                             options.add(q.getIncorrect_answers().get(1));
