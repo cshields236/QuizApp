@@ -70,13 +70,63 @@
 
     </RadioGroup>
 
-    <Button
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/button_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_below="@id/radio_group"
-        android:layout_marginTop="16dp"
-        />
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="49dp"
+        android:src="@drawable/confirm"
+        android:text="Confirm" />
+
+    <TextView
+        android:id="@+id/confTxt"
+        android:layout_width="61dp"
+        android:layout_height="48dp"
+        android:layout_below="@id/button_confirm"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="16dp"
+        android:text="Confirm"
+        android:textAlignment="center"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/button_next"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_below="@id/radio_group"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="50dp"
+
+        android:layout_toRightOf="@id/button_confirm"
+        android:src="@drawable/right"
+
+      />
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_below="@id/button_next"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toRightOf="@id/confTxt"
+        android:text="Next Question"
+        android:textAlignment="center"
+        android:textSize="12dp"
+        android:textStyle="bold" />
+
+    <ProgressBar
+
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

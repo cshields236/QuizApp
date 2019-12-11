@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     RadioButton option3;
     RadioButton option4;
     RadioButton selected;
-    Button confirm;
+    ImageView confirm, nextQ;
     DatabaseReference reference;
     String correctAns;
     TextView timer;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         view_score = findViewById(R.id.text_view_score);
         group = findViewById(R.id.radio_group);
         confirm = findViewById(R.id.button_confirm);
+        nextQ = findViewById(R.id.button_next);
         timer = findViewById(R.id.text_timer);
 
         saveUserInfo();
@@ -97,11 +101,16 @@ public class MainActivity extends AppCompatActivity {
                         q.setQuestion(ds.child("question").getValue().toString());
                         q.setCategory(ds.child("category").getValue().toString());
                         q.setCorrect_answer(ds.child("correct_answer").getValue().toString());
-                        options.add(ds.child("correct_answer").getValue().toString());
+
                         options.add(ds.child("incorrect_answers").child("0").getValue().toString());
                         options.add(ds.child("incorrect_answers").child("1").getValue().toString());
                         options.add(ds.child("incorrect_answers").child("2").getValue().toString());
+                        options.add(q.getCorrect_answer());
+
+
                         q.setIncorrect_answers(options);
+
+
                         questionsList.add(q);
 
                        // Log.d(TAG, "onDataChange: " + q.getCategory());
@@ -117,9 +126,12 @@ public class MainActivity extends AppCompatActivity {
                             options.add(q.getIncorrect_answers().get(2));
                             options.add(q.getCorrect_answer());
 
+
+
                             //Setting Textviews with the values from the database
                             questionTxt.setText(q.question);
 
+                            Log.d(TAG, "onDataChange: " + options.get(0) + options.get(1)+ options.get(2));
                             //Shuffling answers list so its a random selection each time the app is run
                             Collections.shuffle(options);
 
@@ -130,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
 
                             correctAns = (q.getCorrect_answer());
 
-                            Log.d(TAG, "Right answer: " + q.correct_answer);
-
+                            ProgressBar progressBar = findViewById(R.id.progressBar);
+                            progressBar.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -149,39 +161,57 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     checkAnswer();
+//                    option1.setChecked(false);
+//                    option2.setChecked(false);
+//                    option3.setChecked(false);
+//                    option4.setChecked(false);
+
+
+
+                    int radId = group.getCheckedRadioButtonId();
+                    selected = findViewById(radId);
+
+                    if (checkAnswer().equals(correctAns)) {
+
+                        selected.setBackgroundColor(Color.GREEN);
+
+                        Toast.makeText(MainActivity.this, "Well done", Toast.LENGTH_LONG).show();
+
+                        selected.setBackgroundColor(Color.rgb(49, 148, 252));
+
+                        correct++;
+                    } else {
+
+                        selected.setBackgroundColor(Color.RED);
+                        Toast.makeText(MainActivity.this, "You silly ", Toast.LENGTH_LONG).show();
+                        wrong++;
+                    }
+
+                }
+
+            });
+
+            nextQ.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateQuestion();
+
+                    option1.setBackgroundColor(Color.rgb(49, 148, 252));
+                    option2.setBackgroundColor(Color.rgb(49, 148, 252));
+                    option3.setBackgroundColor(Color.rgb(49, 148, 252));
+                    option4.setBackgroundColor(Color.rgb(49, 148, 252));
+
                     option1.setChecked(false);
                     option2.setChecked(false);
                     option3.setChecked(false);
                     option4.setChecked(false);
-
-                    if (checkAnswer().equals(correctAns)) {
-
-
-                        Toast.makeText(MainActivity.this, "Well done", Toast.LENGTH_LONG).show();
-
-                        correct++;
-                    } else {
-                        Toast.makeText(MainActivity.this, "You silly ", Toast.LENGTH_LONG).show();
-                        wrong++;
-                    }
-                    updateQuestion();
                 }
-
             });
 
             view_score.setText("Score: " + correct);
         }
 
     }
-
-    private void openResult() {
-
-        Intent intent = new Intent(this, ResultActivity.class);
-        intent.putExtra("correct", String.valueOf(correct));
-        intent.putExtra("incorrect", String.valueOf(wrong));
-        startActivity(intent);
-    }
-
     public String checkAnswer() {
 
         int radId = group.getCheckedRadioButtonId();
@@ -194,6 +224,15 @@ public class MainActivity extends AppCompatActivity {
         }
         return guess;
     }
+    private void openResult() {
+
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("correct", String.valueOf(correct));
+        intent.putExtra("incorrect", String.valueOf(wrong));
+        startActivity(intent);
+    }
+
+
 
     public void saveUserInfo() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

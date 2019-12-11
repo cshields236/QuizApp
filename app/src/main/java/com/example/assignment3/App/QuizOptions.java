@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
@@ -27,6 +29,9 @@ public class QuizOptions extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.category_list);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Choose Your Category");
+
         Log.d(TAG, "onCreate: started");
         initImageBitMaps();
     }
@@ -45,7 +50,7 @@ public class QuizOptions extends AppCompatActivity {
         mImageUrls.add("https://images.immediate.co.uk/production/volatile/sites/7/2018/01/Military-History_GettyImages-50691729-875e251.jpg?quality=45&resize=620,413");
         mNames.add("History");
 
-        mImageUrls.add("https://www.aljazeera.com/mritems/imagecache/mbdxxlarge/mritems/Images/2019/12/6/891769d9f2e44fd0a6ded8df99e2f52a_18.jpg");
+        mImageUrls.add("https://www.telegraph.co.uk/content/dam/news/2017/06/19/TELEMMGLPICT000077882098_trans_NvBQzQNjv4Bqr-CAX0237pW5VS1eHdEbwgZDBbMmV9FEeCFkZR-jfUM.jpeg?imwidth=450");
         mNames.add("Politics");
 
         mImageUrls.add("https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fblogs-images.forbes.com%2Frobcain%2Ffiles%2F2017%2F10%2FKevin-Home-Alone.jpg");
@@ -56,6 +61,14 @@ public class QuizOptions extends AppCompatActivity {
 
         mImageUrls.add("https://d2s36jztkuk7aw.cloudfront.net/sites/default/files/tile/image/original_441.jpg");
         mNames.add("Music");
+
+
+        mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/687px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg");
+        mNames.add("Art");
+
+
+        mImageUrls.add("https://media.farandwide.com/44/44/4444e5129c134fb6b30529f07e785287.jpg");
+        mNames.add("Geography");
         initRecyclerView();
     }
 
@@ -63,7 +76,10 @@ public class QuizOptions extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recylerview);
         RecyclerViewAdapter recyclerViewAdapter =new RecyclerViewAdapter(this, mNames, mImageUrls);
         recyclerView.setAdapter(recyclerViewAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
 
     }
