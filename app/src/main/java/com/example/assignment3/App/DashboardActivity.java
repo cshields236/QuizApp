@@ -18,7 +18,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
     public void openQuiz(View view){
-        Intent i = new Intent(this, MainActivity.class);
+        Intent i = new Intent(this, QuizOptions.class);
         startActivity(i);
     }
 }

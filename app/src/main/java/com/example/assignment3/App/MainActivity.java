@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     int correct = 0;
     int wrong = 0;
 
+    String catChoice;
     TextView questionTxt, question_count, view_score;
     RadioGroup group;
     RadioButton option1;
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateQuestion() {
         total++;
 
+        catChoice = "sports";
         question_count.setText(String.format("Question %s/5", String.valueOf(total)));
         if (total > 5) {
             //Open Result Activity
@@ -104,9 +106,10 @@ public class MainActivity extends AppCompatActivity {
                        // Log.d(TAG, "onDataChange: " + q.getCategory());
 
                     }
-
+                    //Shuffling the array to get a random question
+                    Collections.shuffle(questionsList);
                     for (Question q : questionsList) {
-                        if (q.getCategory().equalsIgnoreCase("Sports")) {
+                        if (q.getCategory().equalsIgnoreCase(catChoice)) {
                             ArrayList<String> options = new ArrayList<>();
                             options.add(q.getIncorrect_answers().get(0));
                             options.add(q.getIncorrect_answers().get(1));
