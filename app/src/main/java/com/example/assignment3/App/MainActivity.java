@@ -177,13 +177,32 @@ public class MainActivity extends AppCompatActivity {
 
                         Toast.makeText(MainActivity.this, "Well done", Toast.LENGTH_LONG).show();
 
-                        selected.setBackgroundColor(Color.rgb(49, 148, 252));
-
                         correct++;
                     } else {
 
                         selected.setBackgroundColor(Color.RED);
-                        Toast.makeText(MainActivity.this, "You silly ", Toast.LENGTH_LONG).show();
+
+                       int o1 = group.getChildAt(0).getId();
+                        int o2 = group.getChildAt(1).getId();
+                        int o3 = group.getChildAt(2).getId();
+                        int o4 = group.getChildAt(3).getId();
+
+                        RadioButton p1 = findViewById(o1);
+                        RadioButton p2 = findViewById(o2);
+                        RadioButton p3 = findViewById(o3);
+                        RadioButton p4 = findViewById(o4);
+                        if(correctAns.equalsIgnoreCase(p1.getText().toString())){
+                            p1.setBackgroundColor(Color.GREEN);
+                        }else if ( correctAns.equalsIgnoreCase(p2.getText().toString())){
+                            p2.setBackgroundColor(Color.GREEN);
+                        }
+                        else if ( correctAns.equalsIgnoreCase(p3.getText().toString())){
+                            p3.setBackgroundColor(Color.GREEN);
+                        }
+                        else if ( correctAns.equalsIgnoreCase(p4.getText().toString())){
+                            p4.setBackgroundColor(Color.GREEN);
+                        }
+                        Toast.makeText(MainActivity.this,"Unlucky - Correct Answer was: " +  correctAns, Toast.LENGTH_LONG).show();
                         wrong++;
                     }
 
