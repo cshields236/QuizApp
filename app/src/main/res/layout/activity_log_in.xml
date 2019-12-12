@@ -28,7 +28,7 @@
             android:textAlignment="center"
             android:textColorHint="#00FFFFFF"
             android:textDirection="locale"
-            android:textSize="30sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/lPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -59,7 +59,7 @@
             android:inputType="textPassword"
             android:textAlignment="center"
             android:textColorHint="#00FFFFFF"
-            android:textSize="30sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/lButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -105,10 +105,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="252dp"
-        android:layout_height="139dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="227dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/generatedtext" />

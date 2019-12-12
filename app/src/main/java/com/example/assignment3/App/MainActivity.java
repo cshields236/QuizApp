@@ -33,8 +33,8 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
 
     int total = 0;
-    int correct = 0;
-    int wrong = 0;
+    int correct ;
+    int wrong ;
 
     String catChoice;
     TextView questionTxt, question_count, view_score;
@@ -47,10 +47,12 @@ public class MainActivity extends AppCompatActivity {
     ImageView confirm, nextQ;
     DatabaseReference reference;
     String correctAns;
-    TextView timer;
+    TextView cat;
     FirebaseUser firebaseUser;
     ArrayList<Question> questionsList;
     final String TAG = "Firebase ";
+    ArrayList<Integer> scores  = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,11 +70,12 @@ public class MainActivity extends AppCompatActivity {
         group = findViewById(R.id.radio_group);
         confirm = findViewById(R.id.button_confirm);
         nextQ = findViewById(R.id.button_next);
-        timer = findViewById(R.id.text_timer);
+        cat = findViewById(R.id.categorytxt);
 
         saveUserInfo();
 
         updateQuestion();
+        nextQ.setClickable(false);
 
 
     }
@@ -80,12 +83,29 @@ public class MainActivity extends AppCompatActivity {
     private void updateQuestion() {
         total++;
         Intent i = getIntent();
-        catChoice =  i.getStringExtra("CatChoice");
+        catChoice = i.getStringExtra("CatChoice");
 
         question_count.setText(String.format("Question %s/5", String.valueOf(total)));
         if (total > 5) {
             //Open Result Activity
             openResult();
+
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+            String email = currentUser.getEmail();
+            reference = FirebaseDatabase.getInstance().getReference().child("users");
+
+            scores.add(correct);
+            User user = new User(email, scores);
+            reference.child(currentUser.getUid()).child("scores").setValue(correct);
+
+
+            correct = 0;
+            wrong = 0;
+
+            finish();
         } else {
             questionsList = new ArrayList<>();
             reference = FirebaseDatabase.getInstance().getReference().child("questions");
@@ -113,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
                         questionsList.add(q);
 
-                       // Log.d(TAG, "onDataChange: " + q.getCategory());
 
                     }
                     //Shuffling the array to get a random question
@@ -127,11 +146,10 @@ public class MainActivity extends AppCompatActivity {
                             options.add(q.getCorrect_answer());
 
 
-
                             //Setting Textviews with the values from the database
                             questionTxt.setText(q.question);
 
-                            Log.d(TAG, "onDataChange: " + options.get(0) + options.get(1)+ options.get(2));
+
                             //Shuffling answers list so its a random selection each time the app is run
                             Collections.shuffle(options);
 
@@ -139,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             option2.setText(options.get(1));
                             option3.setText(options.get(2));
                             option4.setText(options.get(3));
-
+                            cat.setText(catChoice);
                             correctAns = (q.getCorrect_answer());
 
                             ProgressBar progressBar = findViewById(R.id.progressBar);
@@ -156,18 +174,16 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            int radId = group.getCheckedRadioButtonId();
+            selected = findViewById(radId);
 
             confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     checkAnswer();
-//                    option1.setChecked(false);
-//                    option2.setChecked(false);
-//                    option3.setChecked(false);
-//                    option4.setChecked(false);
+                    confirm.setClickable(false);
 
-
-
+                    nextQ.setClickable(true);
                     int radId = group.getCheckedRadioButtonId();
                     selected = findViewById(radId);
 
@@ -179,10 +195,10 @@ public class MainActivity extends AppCompatActivity {
 
                         correct++;
                     } else {
-
+                        wrong++;
                         selected.setBackgroundColor(Color.RED);
 
-                       int o1 = group.getChildAt(0).getId();
+                        int o1 = group.getChildAt(0).getId();
                         int o2 = group.getChildAt(1).getId();
                         int o3 = group.getChildAt(2).getId();
                         int o4 = group.getChildAt(3).getId();
@@ -191,19 +207,17 @@ public class MainActivity extends AppCompatActivity {
                         RadioButton p2 = findViewById(o2);
                         RadioButton p3 = findViewById(o3);
                         RadioButton p4 = findViewById(o4);
-                        if(correctAns.equalsIgnoreCase(p1.getText().toString())){
+                        if (correctAns.equalsIgnoreCase(p1.getText().toString())) {
                             p1.setBackgroundColor(Color.GREEN);
-                        }else if ( correctAns.equalsIgnoreCase(p2.getText().toString())){
+                        } else if (correctAns.equalsIgnoreCase(p2.getText().toString())) {
                             p2.setBackgroundColor(Color.GREEN);
-                        }
-                        else if ( correctAns.equalsIgnoreCase(p3.getText().toString())){
+                        } else if (correctAns.equalsIgnoreCase(p3.getText().toString())) {
                             p3.setBackgroundColor(Color.GREEN);
-                        }
-                        else if ( correctAns.equalsIgnoreCase(p4.getText().toString())){
+                        } else if (correctAns.equalsIgnoreCase(p4.getText().toString())) {
                             p4.setBackgroundColor(Color.GREEN);
                         }
-                        Toast.makeText(MainActivity.this,"Unlucky - Correct Answer was: " +  correctAns, Toast.LENGTH_LONG).show();
-                        wrong++;
+                        Toast.makeText(MainActivity.this, "Unlucky - Correct Answer was: " + correctAns, Toast.LENGTH_LONG).show();
+
                     }
 
                 }
@@ -214,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     updateQuestion();
-
+                    confirm.setClickable(true);
+                    nextQ.setClickable(false);
                     option1.setBackgroundColor(Color.rgb(49, 148, 252));
                     option2.setBackgroundColor(Color.rgb(49, 148, 252));
                     option3.setBackgroundColor(Color.rgb(49, 148, 252));
@@ -231,18 +246,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
     public String checkAnswer() {
 
         int radId = group.getCheckedRadioButtonId();
         selected = findViewById(radId);
         String guess;
-        if (selected.getText() != null) {
+        if (selected != null) {
             guess = (String) selected.getText();
         } else {
-            guess = "nah";
+            guess = "no";
         }
         return guess;
     }
+
     private void openResult() {
 
         Intent intent = new Intent(this, ResultActivity.class);
@@ -252,16 +270,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     public void saveUserInfo() {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
         String email = currentUser.getEmail();
-        reference = FirebaseDatabase.getInstance().getReference();
+        reference = FirebaseDatabase.getInstance().getReference().child("users");
 
         User user = new User(email);
         reference.child(currentUser.getUid()).setValue(user);
     }
+
 }
