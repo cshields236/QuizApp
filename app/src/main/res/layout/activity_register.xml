@@ -12,7 +12,7 @@
         android:id="@+id/username_text_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="444dp"
+        android:layout_marginBottom="408dp"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="0dp">
 
@@ -27,6 +27,7 @@
             android:ems="10"
             android:hint="Email"
             android:inputType="textPersonName"
+            android:paddingTop="15dp"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/lPassword"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,9 +42,9 @@
         android:id="@+id/username_text_input_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="272dp"
+        android:layout_marginBottom="252dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="38dp">
+        tools:layout_editor_absoluteX="0dp">
 
 
         <EditText
@@ -64,6 +65,7 @@
             app:layout_constraintTop_toBottomOf="@+id/lEmail" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
     <TextView
         android:id="@+id/rLink"
         android:layout_width="wrap_content"

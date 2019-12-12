@@ -1,12 +1,13 @@
 package com.example.assignment3.Model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class User {
 
     public String email;
-    private ArrayList<Integer> scores;
+    private int score;
 
     public User(){
 
@@ -17,17 +18,17 @@ public class User {
     }
 
 
-    public User(String email, ArrayList<Integer> scores) {
+    public User(String email, int scores) {
         this.email = email;
-        this.scores = scores;
+        this.score = scores;
     }
 
-    public List<Integer> getScores() {
-        return scores;
+    public int getScores() {
+        return score;
     }
 
-    public void setScore(ArrayList<Integer> scores) {
-        this.scores = scores;
+    public void setScore(int scores) {
+        this.score = scores;
     }
 
     public String getEmail() {
@@ -37,4 +38,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 }
+
+

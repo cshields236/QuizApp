@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
             String email = currentUser.getEmail();
             reference = FirebaseDatabase.getInstance().getReference().child("users");
 
-            scores.add(correct);
-            User user = new User(email, scores);
-            reference.child(currentUser.getUid()).child("scores").setValue(correct);
+
+            User user = new User(email, correct);
+            reference.child(currentUser.getUid()).setValue(user);
 
 
             correct = 0;

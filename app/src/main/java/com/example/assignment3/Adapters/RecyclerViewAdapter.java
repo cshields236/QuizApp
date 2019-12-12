@@ -60,8 +60,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 Intent intent = new Intent(mContext, MainActivity.class);
                 intent.putExtra("CatChoice" , mImageNames.get(position));
-                mContext.startActivity(intent);
-            }
+
+                if(mImageNames.get(position).contains("@"))
+                {
+
+                }
+                else {
+                    mContext.startActivity(intent);
+                }
+                }
         });
     }
 
